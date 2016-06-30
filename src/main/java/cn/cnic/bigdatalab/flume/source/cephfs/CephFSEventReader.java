@@ -82,9 +82,9 @@ public class CephFSEventReader {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(currentFile.get().getFileName());
-        sb.append(currentFile.get().getFilePath());
-        sb.append(currentFile.get().getLastModified());
+        sb.append(currentFile.get().getFileName() + ",");
+        sb.append(currentFile.get().getFilePath() + ",");
+        sb.append(currentFile.get().getLastModified() + ",");
         sb.append(currentFile.get().getLength());
 
         Event event = EventBuilder.withBody(sb.toString(), Charset.forName(inputCharset));
@@ -168,16 +168,15 @@ public class CephFSEventReader {
     private void rollCurrentFile() throws IOException {
         File fileToRoll = new File(currentFile.get().getFilePath());
 
-        this.close();
-
-        if (fileToRoll.lastModified() != currentFile.get().getLastModified()) {
-            String message = "File has been modified since being read: " + fileToRoll;
-            throw new IllegalStateException(message);
-        }
-        if (fileToRoll.length() != currentFile.get().getLength()) {
-            String message = "File has changed size since being read: " + fileToRoll;
-            throw new IllegalStateException(message);
-        }
+        //TODO:
+//        if (fileToRoll.lastModified() != currentFile.get().getLastModified()) {
+//            String message = "File has been modified since being read: " + fileToRoll;
+//            throw new IllegalStateException(message);
+//        }
+//        if (fileToRoll.length() != currentFile.get().getLength()) {
+//            String message = "File has changed size since being read: " + fileToRoll;
+//            throw new IllegalStateException(message);
+//        }
 
         File dest = new File(fileToRoll.getPath() + completedSuffix);
         logger.info("Preparing to move file {} to {}", fileToRoll, dest);
@@ -203,6 +202,7 @@ public class CephFSEventReader {
                 throw new FlumeException(message);
             }
         }
+        this.close();
     }
 
     /** An immutable class with information about a file being processed. */
