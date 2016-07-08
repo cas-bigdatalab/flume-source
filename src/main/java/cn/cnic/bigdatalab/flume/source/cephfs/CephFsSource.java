@@ -87,7 +87,7 @@ public class CephFsSource extends AbstractSource implements
                 sourceCounter);
     }
 
-    public void configure(Context context) {
+    public synchronized void configure(Context context) {
         cephDirectory = context.getString(CEPH_FILESYSTEM);
         completedSuffix = context.getString(CEPH_FILE_SUFFIX, DEFAULT_CEPH_FILE_SUFFIX);
         ignorePattern = context.getString(IGNORE_PAT, DEFAULT_IGNORE_PAT);
