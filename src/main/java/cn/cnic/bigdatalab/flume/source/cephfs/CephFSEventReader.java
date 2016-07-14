@@ -81,6 +81,10 @@ public class CephFSEventReader {
             currentFile = getNextFile();
         }
 
+        if(!currentFile.isPresent()) {
+            return null;
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append(currentFile.get().getFileName() + ",");
         sb.append(currentFile.get().getFilePath() + ",");
