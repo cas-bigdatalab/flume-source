@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -88,8 +89,7 @@ public class CephFSEventReader {
         StringBuilder sb = new StringBuilder();
         sb.append(currentFile.get().getFileName() + ",");
         sb.append(currentFile.get().getFilePath() + ",");
-        sb.append(currentFile.get().getLastModified() + ",");
-        sb.append(currentFile.get().getLength());
+        sb.append(currentFile.get().getLastModified());
 
         Event event = EventBuilder.withBody(sb.toString(), Charset.forName(inputCharset));
 
@@ -213,13 +213,11 @@ public class CephFSEventReader {
     private static class FileInfo {
         private final String fileName;
         private final String filePath;
-        private final long length;
         private final long lastModified;
 
         public FileInfo(File file) {
             this.fileName = file.getName();
             this.filePath = file.getAbsolutePath();
-            this.length = file.length();
             this.lastModified = file.lastModified();
         }
 
@@ -229,11 +227,11 @@ public class CephFSEventReader {
         public String getFilePath() {
             return filePath;
         }
-        public long getLength() {
-            return length;
-        }
-        public long getLastModified() {
-            return lastModified;
+        public String getLastModified() {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+            Calendar cal=Calendar.getInstance();
+            cal.setTimeInMillis(lastModified);
+            return format.format(cal.getTime());
         }
 
     }
